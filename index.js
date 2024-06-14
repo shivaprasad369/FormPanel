@@ -10,7 +10,8 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use('/api/v1/post', postRoutes);
-
+app.use('/api/v1', postRoutes);
+app.use('/api/v1', postRoutes);
 app.post('/',async (req, res) => {
   try {
     // const {From,TId,To,PickUp,ReturnAt,PickUpAt,Type } = req.body;
