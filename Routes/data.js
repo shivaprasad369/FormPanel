@@ -79,7 +79,7 @@ router.route('/payment').post(async (req, res) => {
     .request(options)
         .then(function (response) {
         // console.log(response.data);
-        console.log(response.data.data.instrumentResponse.redirectInfo.url);
+        res.send(response.data.data.instrumentResponse.redirectInfo.url);
     })
     .catch(function (error) {
       console.error(error);
