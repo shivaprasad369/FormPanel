@@ -34,7 +34,7 @@ router.route('/payments').post(async (req, res) => {
     merchantUserId: 'MUID' + Date.now(),
       name: "shivu",
       amount: 2 * 100,
-      redirectUrl: `http://localhost:3001/api/v1/status/${'T'+Date.now()}`,
+      redirectUrl: `https://formpanel.onrender.com//api/v1/status/${'T'+Date.now()}`,
       redirectMode: "POST",
       mobileNumber:'9380309188',
       paymentInstrument: {
@@ -114,7 +114,7 @@ router.post("/payment", async (req, res) => {
       merchantUserId: 'MUID' + Date.now(),
       name: "shivu",
       amount: 2 * 100,
-      redirectUrl: `http://localhost:3001/api/v1/status/${generatedTranscId()}`,
+      redirectUrl: `https://formpanel.onrender.com/api/v1/status/${generatedTranscId()}`,
       redirectMode: "POST",
       mobileNumber:'9380309188',
       paymentInstrument: {
@@ -198,7 +198,7 @@ router.route('/status/:transactionId').post(async (req, res) => {
   axios.request(options).then((res)=>{
     if(res.data.success===true)
       {
-        const url='http://localhost:3001';
+        const url='https://learnersitacademy.com/';
         return res.redirect(url)
       }
     // console.log(res.data.data.instrumentResponse.redirectInfo.url);
