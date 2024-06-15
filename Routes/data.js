@@ -26,18 +26,21 @@ router.route('/').get(async (req, res) => {
 
 router.route('/payments').post(async (req, res) => {
   try {
+    const newPost = await Post.create(
+      req.body
+    );
     const merchantTransactionId = 'T' + Date.now();
     const merchantUserId = 'MUID' + Date.now();
-
     const data = {
       merchantId: "M225WZIY10UMV",
       merchantTransactionId: merchantTransactionId,
       merchantUserId: merchantUserId,
-      name: "shivu",
+      name: req.Name,
+      email:req.Email,
       amount: 2 * 100, // Amount in paise
       redirectUrl: `https://formpanel.onrender.com/api/v1/status/${merchantTransactionId}`,
       redirectMode: "POST",
-      mobileNumber: "9380309188",
+      mobileNumber: req.Phone,
       paymentInstrument: {
         type: "PAY_PAGE",
       },
