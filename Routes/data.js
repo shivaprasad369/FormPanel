@@ -4,9 +4,9 @@ import Post from '../mongoose/model/Data.js';
 import axios from 'axios';
 import crypto from 'crypto'
 import CryptoJS from 'crypto-js';
-import { request } from 'http';
+
 // import sha256 from 'sha256';
-import { error } from 'console';
+
 // import sha256 from 'sha256';
 dotenv.config();
 const router = express.Router();
@@ -30,30 +30,32 @@ router.route('/payments').post(async (req, res) => {
     const merchantUserId = 'MUID' + Date.now();
 
     const data = {
-      merchantId: 'M225WZIY10UMV',
+      merchantId: "M225WZIY10UMV",
       merchantTransactionId: merchantTransactionId,
       merchantUserId: merchantUserId,
       name: "shivu",
       amount: 2 * 100, // Amount in paise
       redirectUrl: `https://formpanel.onrender.com/api/v1/status/${merchantTransactionId}`,
       redirectMode: "POST",
-      mobileNumber: '9380309188',
+      mobileNumber: "9380309188",
       paymentInstrument: {
         type: "PAY_PAGE",
       },
     };
 
     const payload = JSON.stringify(data);
-    const payloadMain = Buffer.from(payload).toString("base64");
+    const payloadMain = Buffer.from(payload).toString('base64');
 
-    const key = 'a1af0450-4fce-4c51-bded-29c7c5affd8e';
+    const key ="a1af0450-4fce-4c51-bded-29c7c5affd8e";
     const keyIndex = 1;
     const string = payloadMain + "/pg/v1/pay" + key;
-    const hash = crypto.createHash('sha256');
-    hash.update(string);
-    const sha256 = hash.digest('hex');
-    const checksum = sha256 + "###" + keyIndex;
-
+    const hash = crypto.createHash('sha256').update(string).digest('hex');
+    // hash.update(string);
+    const sha256 = hash;
+    const checksum =`${sha256}###${keyIndex}`;
+    console.log(payloadMain)
+    console.log(checksum)
+// const check=CryptoJS.SHA256(payloadMain + "/pg/v1/pay" + key) + '###' + keyIndex;
     const prod_url = 'https://api.phonepe.com/apis/hermes/pg/v1/pay';
 
     const options = {
@@ -61,6 +63,7 @@ router.route('/payments').post(async (req, res) => {
       url: prod_url,
       headers: {
         accept: 'application/json',
+        // 'Authorization':`${mid}`,
         'Content-Type': 'application/json',
         'X-VERIFY': checksum,
       },
@@ -91,7 +94,7 @@ router.route('/payments').post(async (req, res) => {
       })
       .catch(error => {
         console.error("Payment API Error:", error.message);
-        res.status(500).json({ msg: "Payment Failed", status: "error", error: error.message });
+        res.status(500).json({ msg: "Payment Failed", status: "error", error: error });
       });
   } catch (e) {
     console.error("Internal Server Error:", e.message);
@@ -122,7 +125,7 @@ router.post("/payment", async (req, res) => {
       merchantTransactionId: generatedTranscId(),
       merchantUserId: 'MUID' + Date.now(),
       name: "shivu",
-      amount: 2 * 100,
+      amount: 399* 100,
       redirectUrl: `https://formpanel.onrender.com/api/v1/status/${generatedTranscId()}`,
       redirectMode: "POST",
       mobileNumber:'9380309188',
