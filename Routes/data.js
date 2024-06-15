@@ -34,7 +34,7 @@ router.route('/payments').post(async (req, res) => {
     merchantUserId: 'MUID' + Date.now(),
       name: "shivu",
       amount: 2 * 100,
-      redirectUrl: `https://formpanel.onrender.com//api/v1/status/${'T'+Date.now()}`,
+      redirectUrl: `https://formpanel.onrender.com/api/v1/status/${'T'+Date.now()}`,
       redirectMode: "POST",
       mobileNumber:'9380309188',
       paymentInstrument: {
