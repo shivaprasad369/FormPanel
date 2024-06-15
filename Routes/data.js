@@ -216,6 +216,9 @@ router.route('/status/:transactionId').post(async (req, res) => {
         const url='https://learnersitacademy.com/';
         return res.redirect(url)
       }
+      else{
+        return res.status(500).json({ msg: "Payment Failed", status: "error", error: res.data.error });
+      }
     // console.log(res.data.data.instrumentResponse.redirectInfo.url);
     // return res.status(200).send(res.data.data.instrumentResponse.redirectInfo.url)
   })
