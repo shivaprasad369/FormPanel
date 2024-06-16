@@ -30,6 +30,7 @@ router.route('/payments').post(async (req, res) => {
       req.body
     );
     const merchantTransactionId = 'T' + Date.now();
+
     const merchantUserId = 'MUID' + Date.now();
     const data = {
       merchantId: "M225WZIY10UMV",
@@ -37,8 +38,9 @@ router.route('/payments').post(async (req, res) => {
       merchantUserId: merchantUserId,
       name: req.Name,
       email:req.Email,
-      amount: 2 * 100, // Amount in paise
-      redirectUrl: `https://formpanel.onrender.com/api/v1/status/${merchantTransactionId}`,
+      amount: 1 * 100, // Amount in paise
+      // redirectUrl: `https://formpanel.onrender.com/api/v1/status/${merchantTransactionId}`,
+      redirectUrl:'https://learnersitacademy.com/',
       redirectMode: "POST",
       mobileNumber: req.Phone,
       paymentInstrument: {
@@ -129,7 +131,8 @@ router.post("/payment", async (req, res) => {
       merchantUserId: 'MUID' + Date.now(),
       name: "shivu",
       amount: 399* 100,
-      redirectUrl: `https://formpanel.onrender.com/api/v1/status/${generatedTranscId()}`,
+      // redirectUrl: `http://localhost:8080/api/v1/status/${generatedTranscId()}`,
+      redirectUrl:'http://localhost:3001',
       redirectMode: "POST",
       mobileNumber:'9380309188',
       paymentInstrument: {
@@ -192,13 +195,17 @@ function generatedTranscId() {
   return 'T' + Date.now();
 }
 router.route('/status/:transactionId').post(async (req, res) => {
-  const MTID=res.req.body.transactionId;
-  const MId=res.req.body.marchantId;
+try{
+  const MTID=req.params.transactionId;
+  const MId="PGTESTPAYUAT86";
   const keyIndex=1;
-  const string=`/pg/v1/status/${MId}/${MTID}`+'a1af0450-4fce-4c51-bded-29c7c5affd8e';
+  const string=`/pg/v1/status/${MId}/${MTID}`+"96434309-7796-489d-8924-ab56988a6076";
   const sha256=crypto.createHash('sha256').update(string).digest('hex')
   const checkSum=sha256+'###'+keyIndex;
-  const prod_url=`https://api.phonepe.com/apis/hermes/pg/v1/status/${MId}/${MTID}`
+  // const prod_url=`https://api.phonepe.com/apis/hermes/pg/v1/status/${MId}/${MTID}`
+  const prod_url=`https://api-preprod.phonepe.com/apis/hermes/pg/v1/status/${MId}/${MTID}`
+
+  
   const options = {
     method:'GET',
     url:prod_url,
@@ -211,10 +218,11 @@ router.route('/status/:transactionId').post(async (req, res) => {
    
   }
   axios.request(options).then((res)=>{
+    console.log(res.data)
     if(res.data.success===true)
       {
-        const url='https://learnersitacademy.com/';
-        return res.redirect(url)
+        const url="http://localhost:3001";
+      return res.redirect(200,url)
       }
       else{
         return res.status(500).json({ msg: "Payment Failed", status: "error", error: res.data.error });
@@ -222,6 +230,13 @@ router.route('/status/:transactionId').post(async (req, res) => {
     // console.log(res.data.data.instrumentResponse.redirectInfo.url);
     // return res.status(200).send(res.data.data.instrumentResponse.redirectInfo.url)
   })
+}
+ catch (error) {
+  console.error("Status API Error:", error.message);
+  console.error("Status API Error Response:", error.response.data);
+  res.status(500).json({ msg: "Error checking payment status", status: "error", error: error.message });
+}
+
 });
 router.route('/').post(async (req, res) => {
 
