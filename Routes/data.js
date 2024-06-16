@@ -26,9 +26,10 @@ router.route('/').get(async (req, res) => {
 
 router.route('/payments').post(async (req, res) => {
   try {
-    const newPost = await Post.create(
-      req.body
-    );
+  
+    const {Name,Email,Phone}=req.body
+    console.log(Name)
+    // res.status(201).json({ success: true, data: newPost });
     const merchantTransactionId = 'T' + Date.now();
 
     const merchantUserId = 'MUID' + Date.now();
@@ -36,18 +37,26 @@ router.route('/payments').post(async (req, res) => {
       merchantId: "M225WZIY10UMV",
       merchantTransactionId: merchantTransactionId,
       merchantUserId: merchantUserId,
-      name: req.Name,
-      email:req.Email,
-      amount: 1 * 100, // Amount in paise
+      name: Name,
+      email:Email,
+      amount: 399 * 100, // Amount in paise
       // redirectUrl: `https://formpanel.onrender.com/api/v1/status/${merchantTransactionId}`,
       redirectUrl:'https://learnersitacademy.com/',
       redirectMode: "POST",
-      mobileNumber: req.Phone,
+      mobileNumber: Phone,
       paymentInstrument: {
         type: "PAY_PAGE",
       },
     };
-
+    const newPost = await Post.create(
+     {
+      Name:req.body.Name,
+      Phone:req.body.Phone,
+      Email:req.body.Email,
+      Course:merchantTransactionId,
+      Interst:req.body.Interst
+     }
+    );
     const payload = JSON.stringify(data);
     const payloadMain = Buffer.from(payload).toString('base64');
 
@@ -90,7 +99,8 @@ router.route('/payments').post(async (req, res) => {
               status: "success",
               data: paymentResponse,
             });
-            console.log(paymentResponse.data.instrumentResponse.redirectInfo.url);
+            console.log(paymentResponse.data);
+            // res.status(201).json({ success: true, data: paymentResponse.data });
           }
         } else {
           console.error("Payment API Error:", response.status);
@@ -115,6 +125,7 @@ router.post("/payment", async (req, res) => {
   // console.log(req.body);
 
   try {
+    const {Name,Email,Phone}=req.body
     // const price = parseFloat(req.body.price);
     // const { user_id, phone, name, email, tempId } = req.body;
 
@@ -129,10 +140,10 @@ router.post("/payment", async (req, res) => {
       merchantId: "PGTESTPAYUAT86",
       merchantTransactionId: generatedTranscId(),
       merchantUserId: 'MUID' + Date.now(),
-      name: "shivu",
+      name: Name,
       amount: 399* 100,
-      // redirectUrl: `http://localhost:8080/api/v1/status/${generatedTranscId()}`,
-      redirectUrl:'http://localhost:3001',
+      redirectUrl: `http://localhost:8080/api/v1/status/${generatedTranscId()}`,
+      // redirectUrl:'http://localhost:3000',
       redirectMode: "POST",
       mobileNumber:'9380309188',
       paymentInstrument: {
@@ -196,14 +207,18 @@ function generatedTranscId() {
 }
 router.route('/status/:transactionId').post(async (req, res) => {
 try{
+
   const MTID=req.params.transactionId;
-  const MId="PGTESTPAYUAT86";
+  const MId="M225WZIY10UMV";
+  // const MID= "PGTESTPAYUAT86"
   const keyIndex=1;
-  const string=`/pg/v1/status/${MId}/${MTID}`+"96434309-7796-489d-8924-ab56988a6076";
+  const string=`/pg/v1/status/${MId}/${MTID}`+"a1af0450-4fce-4c51-bded-29c7c5affd8e";
+
+  // const string=`/pg/v1/status/${MId}/${MTID}`+"96434309-7796-489d-8924-ab56988a6076";
   const sha256=crypto.createHash('sha256').update(string).digest('hex')
   const checkSum=sha256+'###'+keyIndex;
-  // const prod_url=`https://api.phonepe.com/apis/hermes/pg/v1/status/${MId}/${MTID}`
-  const prod_url=`https://api-preprod.phonepe.com/apis/hermes/pg/v1/status/${MId}/${MTID}`
+  const prod_url=`https://api.phonepe.com/apis/hermes/pg/v1/status/${MId}/${MTID}`
+  // const prod_url=`https://api-preprod.phonepe.com/apis/hermes/pg/v1/status/${MId}/${MTID}`
 
   
   const options = {
@@ -217,12 +232,25 @@ try{
     },
    
   }
+  const filter={'Course':MTID}
   axios.request(options).then((res)=>{
     console.log(res.data)
+  
+      // res.status(201).json({ success: true, data: res.data });
+         
+   
+   const post = Post.findOneAndUpdate({})
+  //  console.log(post)
+   const data=post.Course;
+   console.log(data)
     if(res.data.success===true)
       {
-        const url="http://localhost:3001";
-      return res.redirect(200,url)
+        console.log(Post.findOneAndUpdate(filter, { "Status" : res.data.data.state } ))
+    //  console.log(Post.findOne({Course:MTID}))
+        const url="http://localhost:3000";
+        const string=JSON.stringify(res)
+        return res.send(string.data)
+      // return res.redirect(200,url)
       }
       else{
         return res.status(500).json({ msg: "Payment Failed", status: "error", error: res.data.error });

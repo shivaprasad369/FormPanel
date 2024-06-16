@@ -5,7 +5,8 @@ const Data = new mongoose.Schema({
   Email:{type: String},
   Phone:{type: String},
  Course:{type:String},
- Interst:{type:String}
+ Interst:{type:String},
+ Status:{type:String}
  
 });
 
