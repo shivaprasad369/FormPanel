@@ -5,6 +5,7 @@ import axios from 'axios';
 import crypto from 'crypto'
 import CryptoJS from 'crypto-js';
 
+
 // import sha256 from 'sha256';
 
 // import sha256 from 'sha256';
@@ -27,8 +28,8 @@ router.route('/').get(async (req, res) => {
 router.route('/payments').post(async (req, res) => {
   try {
   
-    const {Name,Email,Phone}=req.body
-    console.log(Name)
+    const {name,email,phone,address,price}=req.body
+    console.log(name)
     // res.status(201).json({ success: true, data: newPost });
     const merchantTransactionId = 'T' + Date.now();
 
@@ -37,26 +38,28 @@ router.route('/payments').post(async (req, res) => {
       merchantId: "M225WZIY10UMV",
       merchantTransactionId: merchantTransactionId,
       merchantUserId: merchantUserId,
-      name: Name,
-      email:Email,
-      amount: 399 * 100, // Amount in paise
-      // redirectUrl: `https://formpanel.onrender.com/api/v1/status/${merchantTransactionId}`,
-      redirectUrl:'https://learnersitacademy.com/',
+      name: name,
+      email:email,
+      amount: 100 * price, // Amount in paise
+      redirectUrl: `http://localhost:8080/api/v1/status/${merchantTransactionId}`,
+      // redirectUrl:'https://learnersitacademy.com/',
+      
       redirectMode: "POST",
-      mobileNumber: Phone,
+      mobileNumber: phone,
       paymentInstrument: {
         type: "PAY_PAGE",
       },
     };
-    const newPost = await Post.create(
-     {
-      Name:req.body.Name,
-      Phone:req.body.Phone,
-      Email:req.body.Email,
-      Course:merchantTransactionId,
-      Interst:req.body.Interst
-     }
-    );
+    // const newPost = await Post.create(
+    //  {
+    //   Name:name,
+    //   Phone:phone,
+    //   Email:email,
+    //   Course:merchantTransactionId,
+    //   message:req.body.Interst,
+    // course:course
+    //  }
+    // );
     const payload = JSON.stringify(data);
     const payloadMain = Buffer.from(payload).toString('base64');
 
@@ -125,7 +128,7 @@ router.post("/payment", async (req, res) => {
   // console.log(req.body);
 
   try {
-    const {Name,Email,Phone}=req.body
+    const {name,email,subject,message}=req.body
     // const price = parseFloat(req.body.price);
     // const { user_id, phone, name, email, tempId } = req.body;
 
@@ -140,10 +143,10 @@ router.post("/payment", async (req, res) => {
       merchantId: "PGTESTPAYUAT86",
       merchantTransactionId: generatedTranscId(),
       merchantUserId: 'MUID' + Date.now(),
-      name: Name,
-      amount: 399* 100,
+      name: name,
+      amount: 100*req.body.price,
       redirectUrl: `http://localhost:8080/api/v1/status/${generatedTranscId()}`,
-      // redirectUrl:'http://localhost:3000',
+      // redirectUrl:'http://localhost:3000/',
       redirectMode: "POST",
       mobileNumber:'9380309188',
       paymentInstrument: {
@@ -210,8 +213,10 @@ try{
 
   const MTID=req.params.transactionId;
   const MId="M225WZIY10UMV";
-  // const MID= "PGTESTPAYUAT86"
+  // const MId="PGTESTPAYUAT86";
   const keyIndex=1;
+  var message,id;
+
   const string=`/pg/v1/status/${MId}/${MTID}`+"a1af0450-4fce-4c51-bded-29c7c5affd8e";
 
   // const string=`/pg/v1/status/${MId}/${MTID}`+"96434309-7796-489d-8924-ab56988a6076";
@@ -233,31 +238,59 @@ try{
    
   }
   const filter={'Course':MTID}
-  axios.request(options).then((res)=>{
-    console.log(res.data)
+  const response=await axios.request(options)
+  console.log(response.data.success)
+
+  if(response.data.success===true){
+  console.log(response.data)
+  //  res.send({
+  //   status: response.data.success,
+  //   message: response.data.message,
+  //   data: response.data.data,
+  //   transactionId: response.data.data.transactionId,
+  //   // url: "http://localhost:3000",
+  //   // message: message,
+    
+  //  })
+ return res.redirect('http://localhost:3000/course')
+    // res.send({
+     
+    //   status: "success",
+     
+    // })
+  }
+  else{
+    return res.redirect('http://localhost:3000')
+  }
+  // .then((res)=>{
+  //   console.log(res.data)
   
-      // res.status(201).json({ success: true, data: res.data });
-         
+  //     // res.status(201).json({ success: true, data: res.data });
+     
    
-   const post = Post.findOneAndUpdate({})
-  //  console.log(post)
-   const data=post.Course;
-   console.log(data)
-    if(res.data.success===true)
-      {
-        console.log(Post.findOneAndUpdate(filter, { "Status" : res.data.data.state } ))
-    //  console.log(Post.findOne({Course:MTID}))
-        const url="http://localhost:3000";
-        const string=JSON.stringify(res)
-        return res.send(string.data)
-      // return res.redirect(200,url)
-      }
-      else{
-        return res.status(500).json({ msg: "Payment Failed", status: "error", error: res.data.error });
-      }
-    // console.log(res.data.data.instrumentResponse.redirectInfo.url);
-    // return res.status(200).send(res.data.data.instrumentResponse.redirectInfo.url)
-  })
+  //  const post = Post.findOneAndUpdate({})
+  // //  console.log(post)
+  //  const data=post.Course;
+  //  console.log(data)
+  //   if(res.data.success===true)
+  //     {
+  //       console.log(Post.findOneAndUpdate(filter, { "Status" : res.data.data.state } ))
+  //   //  console.log(Post.findOne({Course:MTID}))
+  //       const url="http://localhost:3000";
+  //       console.log(res.data.message)
+  //       message=res.data.message;
+  //       id=res.data.data.transactionId;
+     
+  //       // const string=JSON.stringify(res)
+  //       // return res.send(string.data)
+  //     // return res.redirect(200,url)
+  //     }
+  //     else{
+  //       return res.status(500).json({ msg: "Payment Failed", status: "error", error: res.data.error });
+  //     }
+  //   // console.log(res.data.data.instrumentResponse.redirectInfo.url);
+  //   // return res.status(200).send(res.data.data.instrumentResponse.redirectInfo.url)
+  // })
 }
  catch (error) {
   console.error("Status API Error:", error.message);
