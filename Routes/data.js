@@ -4,7 +4,7 @@ import Post from '../mongoose/model/Data.js';
 import axios from 'axios';
 import crypto from 'crypto'
 import CryptoJS from 'crypto-js';
-
+import Status from '../mongoose/model/Status.js'
 
 // import sha256 from 'sha256';
 
@@ -41,7 +41,7 @@ router.route('/payments').post(async (req, res) => {
       name: name,
       email:email,
       amount: 100 * price, // Amount in paise
-      redirectUrl: `https://formpanel-1.onrender.com/api/v1/status/${merchantTransactionId}`,
+      redirectUrl: `https://formpanel-1.onrender.com//api/v1/status/${merchantTransactionId}`,
       // redirectUrl:'https://learnersitacademy.com/',
       
       redirectMode: "POST",
@@ -55,7 +55,7 @@ router.route('/payments').post(async (req, res) => {
       Name:name,
       Phone:phone,
       Email:email,
-      Course:merchantTransactionId,
+      TId:merchantTransactionId,
       Address:address,
     course:course
      }
@@ -242,6 +242,12 @@ try{
   console.log(response.data.success)
 
   if(response.data.success===true){
+ await Status.create({
+      TId: MTID,
+      Status: response.data.success,
+      Message:response.data.message
+
+    })
   console.log(response.data)
   //  res.send({
   //   status: response.data.success,
@@ -260,6 +266,12 @@ try{
     // })
   }
   else{
+    const data=await Status.create({
+      TId: MTID,
+      Status: response.data.success,
+      Message:response.data.message
+
+    })
     return res.redirect('http://localhost:3000')
   }
   // .then((res)=>{

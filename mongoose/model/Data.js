@@ -4,7 +4,7 @@ const Data = new mongoose.Schema({
   Name:{type: String},
   Email:{type: String},
   Phone:{type: String},
- Course:{type:String},
+ TId:{type:String},
 Address:{type:String},
  course:{type:String}
  
