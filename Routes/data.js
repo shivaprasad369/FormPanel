@@ -41,7 +41,7 @@ router.route('/payments').post(async (req, res) => {
       name: name,
       email:email,
       amount: 100 * price, // Amount in paise
-      redirectUrl: `https://formpanel-1.onrender.com//api/v1/status/${merchantTransactionId}`,
+      redirectUrl: `https://formpanel-1.onrender.com/api/v1/status/${merchantTransactionId}`,
       // redirectUrl:'https://learnersitacademy.com/',
       
       redirectMode: "POST",
