@@ -24,6 +24,15 @@ router.route('/').get(async (req, res) => {
     res.status(500).json({ success: false, message: 'Fetching posts failed, please try again' });
   }
 });
+router.route('/statu').get(async (req, res) => {
+  const id = req.params.id;
+try {
+  const posts = await Status.find({});
+  res.status(200).json({ success: true, data: posts });
+} catch (err) {
+  res.status(500).json({ success: false, message: 'Fetching posts failed, please try again' });
+}
+});
 
 router.route('/payments').post(async (req, res) => {
   try {
