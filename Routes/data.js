@@ -28,7 +28,7 @@ router.route('/').get(async (req, res) => {
 router.route('/payments').post(async (req, res) => {
   try {
   
-    const {name,email,phone,address,price}=req.body
+    const {name,email,phone,address,price,course}=req.body
     console.log(name)
     // res.status(201).json({ success: true, data: newPost });
     const merchantTransactionId = 'T' + Date.now();
@@ -50,16 +50,16 @@ router.route('/payments').post(async (req, res) => {
         type: "PAY_PAGE",
       },
     };
-    // const newPost = await Post.create(
-    //  {
-    //   Name:name,
-    //   Phone:phone,
-    //   Email:email,
-    //   Course:merchantTransactionId,
-    //   message:req.body.Interst,
-    // course:course
-    //  }
-    // );
+    const newPost = await Post.create(
+     {
+      Name:name,
+      Phone:phone,
+      Email:email,
+      Course:merchantTransactionId,
+      Address:address,
+    course:course
+     }
+    );
     const payload = JSON.stringify(data);
     const payloadMain = Buffer.from(payload).toString('base64');
 
