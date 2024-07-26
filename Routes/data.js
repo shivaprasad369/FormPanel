@@ -272,7 +272,7 @@ try{
   //   // message: message,
     
   //  })
- return res.redirect('http://localhost:3000/success')
+ return res.redirect('http://localhost:3000/success/'+MTID)
     // res.send({
      
     //   status: "success",
