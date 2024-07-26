@@ -251,6 +251,11 @@ try{
   console.log(response.data.success)
 
   if(response.data.success===true){
+   const data= await Post.findOne({TId:MTID})
+   console.log(data)
+    // collection.find({ age: { $gt: 25 } }).toArray(function(err, docs) {
+    //   console.log(docs);
+    // });
  await Status.create({
       TId: MTID,
       Status: response.data.success,
@@ -267,7 +272,7 @@ try{
   //   // message: message,
     
   //  })
- return res.redirect('http://localhost:3000/course')
+ return res.redirect('http://localhost:3000/success')
     // res.send({
      
     //   status: "success",
@@ -275,13 +280,15 @@ try{
     // })
   }
   else{
+    // const datas= await Post.findOne({TId:MTID})
+    // console.log(datas)
     const data=await Status.create({
       TId: MTID,
       Status: response.data.success,
       Message:response.data.message
 
     })
-    return res.redirect('http://localhost:3000')
+    return res.redirect('http://localhost:3000/fail')
   }
   // .then((res)=>{
   //   console.log(res.data)
