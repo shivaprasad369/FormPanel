@@ -250,7 +250,7 @@ try{
   const response=await axios.request(options)
   console.log(response.data.success)
 
-  if(response.data.success===true){
+  if(response.data.data.state==='COMPLETED'){
    const data= await Post.findOne({TId:MTID})
    console.log(data)
     // collection.find({ age: { $gt: 25 } }).toArray(function(err, docs) {
