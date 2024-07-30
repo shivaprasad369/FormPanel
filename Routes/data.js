@@ -251,8 +251,8 @@ try{
   console.log(response.data.success)
 
   if(response.data.data.state==='COMPLETED'){
-   const data= await Post.findOne({TId:MTID})
-   console.log(data)
+  //  const data= await Post.findOne({TId:MTID})
+  //  console.log(data)
     // collection.find({ age: { $gt: 25 } }).toArray(function(err, docs) {
     //   console.log(docs);
     // });
@@ -326,6 +326,16 @@ try{
   res.status(500).json({ msg: "Error checking payment status", status: "error", error: error.message });
 }
 
+});
+
+// '/status/:transactionId'
+router.route('/:transactionId').get(async (req, res) => {
+  const MTID=req.params.transactionId;
+  // const {From,TId,To,PickUp,ReturnAt,PickUpAt,Type } = req.body;
+  const data1= await Status.findOne({TId:MTID})
+  const data= await Post.findOne({TId:MTID})
+  return res.send({user:data,status:data1})
+  
 });
 router.route('/').post(async (req, res) => {
 
