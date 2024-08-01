@@ -154,7 +154,7 @@ router.post("/payment", async (req, res) => {
       merchantUserId: 'MUID' + Date.now(),
       name: name,
       amount: 100*req.body.price,
-      redirectUrl: `http://localhost:8080/api/v1/status/${generatedTranscId()}`,
+      redirectUrl: `https://learnersitacademy.com/api/v1/status/${generatedTranscId()}`,
       // redirectUrl:'http://localhost:3000/',
       redirectMode: "POST",
       mobileNumber:'9380309188',
