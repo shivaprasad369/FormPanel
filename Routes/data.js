@@ -272,7 +272,7 @@ try{
   //   // message: message,
     
   //  })
- return res.redirect('http://localhost:3000/success/'+MTID)
+ return res.redirect('hhttps://learnersitacademy.com/success/'+MTID)
     // res.send({
      
     //   status: "success",
@@ -288,7 +288,7 @@ try{
       Message:response.data.message
 
     })
-    return res.redirect('http://localhost:3000/fail')
+    return res.redirect('https://learnersitacademy.com/fail')
   }
   // .then((res)=>{
   //   console.log(res.data)
